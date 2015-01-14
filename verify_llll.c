@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <stdio.h>i
 #include <stdlib.h>
 #include <string.h>
-int main(void) {
+int main(int argc, char *argv[]) {
 //	FILE *inFile;
 	FILE *outFile;
 //	char inbuffer[1024];
@@ -14,11 +14,11 @@ int main(void) {
 		printf("InputFile Open Failure");
 	}
 */	
-	outFile = fopen("output.txt","r");
-	if(outFile == NULL) {
-		printf("OutputFIle Open Failure");
+	outFile = fopen(argv[1],"r");
+	if(!outFile) {
+		printf("The file : %s is not found!\n",argv[1]);
+		return;
 	}
-
 	else {
 		while(gets(string) != NULL){
 		fgets(outbuffer, 1024, outFile);
@@ -26,9 +26,9 @@ int main(void) {
 			ptr = strcmp(string,outbuffer);
 			//printf("%d\n",ptr);
 			if((ptr+10) == 0)
-				printf("OK!\n%s %s", string, outbuffer);
+				printf("OK!\n");
 			else
-				printf("Fail\n%s %s", string, outbuffer);
+				printf("Fail\n");
 		}
 	}
 //	fclose(inFile);
