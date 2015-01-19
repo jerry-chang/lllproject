@@ -19,6 +19,54 @@ void add_node(char *str, struct list_head *head)
     list_add_tail(&fooPtr->list_member, head);
 }
 
+void insert_node(char *find, char *insert, struct list_head *head)
+{
+    struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
+    struct list_head *iter;
+    struct foo *objPtr;
+
+    assert(fooPtr != NULL);
+    fooPtr->word = insert;
+    list_for_each(iter, head) {
+	objPtr = list_entry(iter, struct foo, list_member);
+	if(strcmp(objPtr->word,find) == 0) {
+		list_add(&fooPtr->list_member,iter);
+	}
+    }
+}
+
+void append_node(char *find, char *append, struct list_head *head)
+{
+    struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
+    struct list_head *iter;
+    struct foo *objPtr;
+
+    assert(fooPtr != NULL);
+    fooPtr->word = append;
+    list_for_each(iter, head) {
+	objPtr = list_entry(iter, struct foo, list_member);
+	if(strcmp(objPtr->word,find) == 0) {
+		list_add_tail(&fooPtr->list_member,iter);
+	}
+    }
+}
+
+int delete_node(char *delete, struct list_head *head)
+{
+    struct list_head *iter;
+    struct foo *objPtr;
+
+    list_for_each(iter, head) {
+	objPtr = list_entry(iter, struct foo, list_member);
+	if(strcmp(objPtr->word,delete) == 0) {
+		list_del(&objPtr->list_member);
+		free(objPtr);
+		return 1;
+	}
+    }
+    return 0;
+}
+
 void display(struct list_head *head)
 {
     struct list_head *iter;
@@ -54,6 +102,7 @@ main()
 	int s_count = 0;
 	int word_count = 0;
     	LIST_HEAD(fooHead);
+	/*
 	while(gets(string) != NULL) {
 		s = strtok(string," ");
 		while(s != NULL) {
@@ -69,5 +118,15 @@ main()
 		s_count = 0;
 		word_count = 0;
 	}
+	*/
+	add_node("hello",&fooHead);
+	add_node("world",&fooHead);
+	display(&fooHead);
+	append_node("world","my",&fooHead);
+	insert_node("world","dogs",&fooHead);
+	delete_node("world",&fooHead);
+	append_node("dogs","and",&fooHead);
+	append_node("and","cats",&fooHead);
+	display(&fooHead);
 }
 
