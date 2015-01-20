@@ -17,6 +17,20 @@
  * using the generic single-entry routines.
  */
 
+/*
+ * This is copy from <linux/types.h> #L186
+ */
+struct list_head {
+	struct list_head *next, *prev;
+}
+
+/*
+ * Following #define LIST_POISON is copy from <linux/poison.h> #L22
+ */
+
+#define LIST_POISON1 ((void *) 0x00100100)
+#define LIST_POISON2 ((void *) 0x00200200)
+
 #define LIST_HEAD_INIT(name) { &(name), &(name) }
 
 #define LIST_HEAD(name) \
@@ -341,6 +355,23 @@ static inline void list_splice_tail_init(struct list_head *list,
 		INIT_LIST_HEAD(list);
 	}
 }
+
+/*
+ * Following #define offsetof and container_of is copy from <linux/kernel.h> #L795
+ */
+
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+
+/**
+ * container_of - cast a member of a structure out to the containing structure
+ * @ptr:        the pointer to the member.
+ * @type:       the type of the container struct this is embedded in.
+ * @member:     the name of the member within the struct.
+ *
+ */
+#define container_of(ptr, type, member) ({                      \
+        const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
+        (type *)( (char *)__mptr - offsetof(type,member) );})
 
 /**
  * list_entry - get the struct for this entry
