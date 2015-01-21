@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include "list_modify.h"
+#include "list.h"
 
 struct foo {
 	char *word;
@@ -14,7 +14,7 @@ void add_node(char *str, struct list_head *head)
     struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
     assert(fooPtr != NULL);
     
-    fooPtr->word = str;
+    fooPtr->word = strdup(str);
     INIT_LIST_HEAD(&fooPtr->list_member);
     list_add_tail(&fooPtr->list_member, head);
 }
@@ -26,7 +26,7 @@ int insert_node(char *find, char *insert, struct list_head *head)
     struct foo *objPtr;
 
     assert(fooPtr != NULL);
-    fooPtr->word = insert;
+    fooPtr->word = strdup(insert);
     list_for_each(iter, head) {
 	objPtr = list_entry(iter, struct foo, list_member);
 	if(strcmp(objPtr->word,find) == 0) {
@@ -44,7 +44,7 @@ int append_node(char *find, char *append, struct list_head *head)
     struct foo *objPtr;
 
     assert(fooPtr != NULL);
-    fooPtr->word = append;
+    fooPtr->word = strdup(append);
     list_for_each(iter, head) {
 	objPtr = list_entry(iter, struct foo, list_member);
 	if(strcmp(objPtr->word,find) == 0) {
@@ -64,6 +64,7 @@ int delete_node(char *delete, struct list_head *head)
 	objPtr = list_entry(iter, struct foo, list_member);
 	if(strcmp(objPtr->word,delete) == 0) {
 		list_del(&objPtr->list_member);
+		free(objPtr->word);
 		free(objPtr);
 		return 1;
 	}
@@ -91,6 +92,7 @@ void delete_all(struct list_head *head)
     list_for_each(iter, head) {
         objPtr = list_entry(iter, struct foo, list_member);
         list_del(&objPtr->list_member);
+	free(objPtr->word);
         free(objPtr);
 	goto redo;
     }
