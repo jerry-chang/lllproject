@@ -1,8 +1,0 @@
-#This is a makefile for lll.c
-
-all:lll.c
-	gcc lll.c -o lll
-clean:
-	rm -f lll
-cat:
-	cat input.txt | ./lll
