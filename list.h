@@ -1,12 +1,8 @@
 #ifndef _LINUX_LIST_H
 #define _LINUX_LIST_H
 
-#include <linux/types.h>
 #include <linux/stddef.h>
-#include <linux/poison.h>
 #include <linux/const.h>
-#include <linux/kernel.h>
-
 /*
  * Simple doubly linked list implementation.
  *
@@ -22,7 +18,7 @@
  */
 struct list_head {
 	struct list_head *next, *prev;
-}
+};
 
 /*
  * Following #define LIST_POISON is copy from <linux/poison.h> #L22
@@ -626,6 +622,14 @@ static inline void list_splice_tail_init(struct list_head *list,
 #define HLIST_HEAD_INIT { .first = NULL }
 #define HLIST_HEAD(name) struct hlist_head name = {  .first = NULL }
 #define INIT_HLIST_HEAD(ptr) ((ptr)->first = NULL)
+
+/*
+ * The following struct is copy from <linux/types.h> #L193
+ */
+struct hlist_node {
+	struct hlist_node *next, **pprev;
+};
+
 static inline void INIT_HLIST_NODE(struct hlist_node *h)
 {
 	h->next = NULL;
@@ -636,6 +640,14 @@ static inline int hlist_unhashed(const struct hlist_node *h)
 {
 	return !h->pprev;
 }
+
+/*
+ * The following struct is copy from <linux/types.h> #L189
+ */
+
+struct hlist_head {
+	struct hlist_node *first;
+};
 
 static inline int hlist_empty(const struct hlist_head *h)
 {
@@ -676,7 +688,9 @@ static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
 	n->pprev = &h->first;
 }
 
+
 /* next must be != NULL */
+
 static inline void hlist_add_before(struct hlist_node *n,
 					struct hlist_node *next)
 {
@@ -698,6 +712,7 @@ static inline void hlist_add_behind(struct hlist_node *n,
 }
 
 /* after that we'll appear to be on some hlist and hlist_del will work */
+
 static inline void hlist_add_fake(struct hlist_node *n)
 {
 	n->pprev = &n->next;
@@ -707,6 +722,7 @@ static inline void hlist_add_fake(struct hlist_node *n)
  * Move a list from one list head to another. Fixup the pprev
  * reference of the first entry if it exists.
  */
+
 static inline void hlist_move_list(struct hlist_head *old,
 				   struct hlist_head *new)
 {
