@@ -1,6 +1,11 @@
 #This is a makefile for linux link list.
 
-all:verify_llll.c
+verify: verify_llll.c
 	gcc verify_llll.c -o verify_llll
+lll: lll.c
+	gcc lll.c -o lll
+test:
+	cat input.txt | ./lll
 clean:
-	rm verify_llll
+	rm -f verify_llll
+	rm -f lll
