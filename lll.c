@@ -123,37 +123,37 @@ void main()
 				put[s_count++] = s;
 				s = strtok(NULL," ");
 			}
-/*
-		for(x = 0;x < s_count;x++) {
-                        printf("put[%d] %s \n",x,put[x]);
-                }
-*/
-			if(strcmp(put[0],"a") == 0) {
-				append_node(put[1],put[2],&fooHead);
-				display(&fooHead);
-			}
-			else if(strcmp(put[0],"i") == 0) {
-				insert_node(put[1],put[2],&fooHead);
-                        	display(&fooHead);
-			}
-			else if(strcmp(put[0],"d") == 0) {
-				delete_node(put[1],&fooHead);
-				display(&fooHead);
+			if(s_count > 20) {
+				printf("String token is overflow. The following commands are not available.\n");
 			}
 			else {
-				delete_all(&fooHead);
-				while(word_count != s_count) {
-					add_node(put[word_count],&fooHead);
-					word_count++;
+				if(strcmp(put[0],"a") == 0) {
+					append_node(put[1],put[2],&fooHead);
+					display(&fooHead);
 				}
-				display(&fooHead);
+				else if(strcmp(put[0],"i") == 0) {
+					insert_node(put[1],put[2],&fooHead);
+                        		display(&fooHead);
+				}
+				else if(strcmp(put[0],"d") == 0) {
+					delete_node(put[1],&fooHead);
+					display(&fooHead);
+				}
+				else {
+					delete_all(&fooHead);
+					while(word_count != s_count) {
+						add_node(put[word_count],&fooHead);
+						word_count++;
+					}
+					display(&fooHead);
+				}
+				s_count = 0;
+				word_count = 0;
 			}
 			s_count = 0;
-			word_count = 0;
-			//LIST_HEAD(fooHead);
 		}
 		else 
-			printf("Your input string overflow ");
+			printf("Your input string overflow. The following commands are not available.\n ");
 	}
 	//}                    
 }
