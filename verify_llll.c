@@ -8,6 +8,8 @@ int main(int argc, char *argv[]) {
 	char string[1024];
 	char outbuffer[1024];
 	int ptr;
+	int flag1=0;
+	int flag2=0;
 /*
 	inFile = fopen("input.txt","r");
 	if(inFile == NULL) {
@@ -19,19 +21,28 @@ int main(int argc, char *argv[]) {
 		printf("The file : %s is not found!\n",argv[1]);
 		return;
 	}
-	else {
-		while(gets(string) != NULL){
-		fgets(outbuffer, 1024, outFile);
-//			fread(buffer, 1024, 1, inFile);
-			ptr = strcmp(string,outbuffer);
-			//printf("%d\n",ptr);
-			if((ptr+10) == 0)
-				printf("OK!\n");
-			else
-				printf("Fail\n");
+	do{
+		
+		if(fgets(string,1024,stdin) == NULL) {
+			flag1 = 1;
+		} else {
 		}
-	}
-//	fclose(inFile);
+		if(fgets(outbuffer,1024,outFile) == NULL) {
+			flag2 = 1;
+		} else {
+		}
+		if(flag1 == 1 && flag2 == 1) {
+			printf("OK\n");
+			break;
+		}
+		ptr = strcmp(string,outbuffer);
+		//printf("%d\n",ptr);
+		if(ptr != 0) {
+			printf("Fail\n");
+			printf("input = %soutput = %s\n",string,outbuffer);
+			break;
+		}
+	} while(1);
 	fclose(outFile);
 	return 0;
 }
