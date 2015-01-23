@@ -6,56 +6,70 @@
 
 struct foo {
 	char *word;
-	struct list_head list_member;
+	struct list_head list;
 };
 
 void add_node(char *str, struct list_head *head)
 {
-    struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
-    assert(fooPtr != NULL);
+    struct foo *fooptr = (struct foo *)malloc(sizeof(struct foo));
+    assert(fooptr != NULL);
     
-    fooPtr->word = strdup(str);
+    fooptr->word = strdup(str);
     
-//    fooPtr->word = malloc(strlen(str)+1);
-//    strcpy(fooPtr->word, str);
-    INIT_LIST_HEAD(&fooPtr->list_member);
-    list_add_tail(&fooPtr->list_member, head);
+//    fooptr->word = malloc(strlen(str)+1);
+//    strcpy(fooptr->word, str);
+    INIT_LIST_HEAD(&fooptr->list);
+    list_add_tail(&fooptr->list, head);
 }
-
+/*
+struct foo *find_node(char *find, struct list_head *head)
+{
+	struct list_head *iter;
+	struct foo *node;
+	list_for_each(iter, head) {
+		node = list_entry(iter, struct foo, list);
+		if(strcmp(node->word,find) == 0) {
+			printf("find it !\n");
+			return iter;
+		}
+	}
+	return NULL;
+}
+*/
 int insert_node(char *find, char *insert, struct list_head *head)
 {
-    struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
+    struct foo *fooptr = (struct foo *)malloc(sizeof(struct foo));
     struct list_head *iter;
     struct foo *objPtr;
-
-    assert(fooPtr != NULL);
-    fooPtr->word = strdup(insert);
+    assert(fooptr != NULL);
+    fooptr->word = strdup(insert);
     list_for_each(iter, head) {
-	objPtr = list_entry(iter, struct foo, list_member);
+	objPtr = list_entry(iter, struct foo, list);
 	if(strcmp(objPtr->word,find) == 0) {
-		list_add(&fooPtr->list_member,iter);
-		return 1;
+		list_add(&fooptr->list,iter);
+		return 0;
 	}
     }
-    return 0;
+    return 1;
+    
 }
 
 int append_node(char *find, char *append, struct list_head *head)
 {
-    struct foo *fooPtr = (struct foo *)malloc(sizeof(struct foo));
+    struct foo *fooptr = (struct foo *)malloc(sizeof(struct foo));
     struct list_head *iter;
     struct foo *objPtr;
 
-    assert(fooPtr != NULL);
-    fooPtr->word = strdup(append);
+    assert(fooptr != NULL);
+    fooptr->word = strdup(append);
     list_for_each(iter, head) {
-	objPtr = list_entry(iter, struct foo, list_member);
+	objPtr = list_entry(iter, struct foo, list);
 	if(strcmp(objPtr->word,find) == 0) {
-		list_add_tail(&fooPtr->list_member,iter);
-		return 1;
+		list_add_tail(&fooptr->list,iter);
+		return 0;
 	}
     }
-    return 0;
+    return 1;
 }
 
 int delete_node(char *delete, struct list_head *head)
@@ -65,15 +79,15 @@ int delete_node(char *delete, struct list_head *head)
     struct foo *objPtr;
 
     list_for_each_safe(iter, n, head) {
-	objPtr = list_entry(iter, struct foo, list_member);
+	objPtr = list_entry(iter, struct foo, list);
 	if(strcmp(objPtr->word,delete) == 0) {
-		list_del(&objPtr->list_member);
+		list_del(&objPtr->list);
 		free(objPtr->word);
 		free(objPtr);
-		return 1;
+		return 0;
 	}
     }
-    return 0;
+    return 1;
 }
 
 void display(struct list_head *head)
@@ -82,7 +96,7 @@ void display(struct list_head *head)
     struct foo *objPtr;
 
     list_for_each(iter, head) {
-        objPtr = list_entry(iter, struct foo, list_member);
+        objPtr = list_entry(iter, struct foo, list);
         printf("%s ", objPtr->word);
     }
     printf("\n");
@@ -94,8 +108,8 @@ void delete_all(struct list_head *head)
     struct foo *objPtr;
     redo: 
     list_for_each(iter, head) {
-        objPtr = list_entry(iter, struct foo, list_member);
-        list_del(&objPtr->list_member);
+        objPtr = list_entry(iter, struct foo, list);
+        list_del(&objPtr->list);
 	free(objPtr->word);
         free(objPtr);
 	goto redo;
@@ -128,6 +142,7 @@ void main()
 			}
 			else {
 				if(strcmp(put[0],"a") == 0) {
+					//find_node(put[1],&fooHead);
 					append_node(put[1],put[2],&fooHead);
 					display(&fooHead);
 				}
