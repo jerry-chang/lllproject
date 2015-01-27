@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 		}
 		ptr = strcmp(string,outbuffer);
 		//printf("%d\n",ptr);
-		if(ptr != 0) {
+		if((ptr-22) != 0) {
 			printf("Fail\n");
 			printf("input = %soutput = %s\n",string,outbuffer);
 			break;
