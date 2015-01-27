@@ -5,6 +5,8 @@ verify: verify_llll.c
 lll: lll.c
 	gcc lll.c -o lll
 test:
+	cat input.txt | ./lll | ./verify_llll output.txt
+lll_test:
 	cat input.txt | ./lll
 clean:
 	rm -f verify_llll
