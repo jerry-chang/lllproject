@@ -37,7 +37,6 @@ int find_node(char *find, struct list_head *head, struct list_head *findptr)
 	}
 	return 1;
 }
-
 int insert_node(char *find, char *insert, struct list_head *head)
 {
     struct foo *fooptr = (struct foo *)malloc(sizeof(struct foo));
@@ -45,8 +44,8 @@ int insert_node(char *find, char *insert, struct list_head *head)
     assert(fooptr != NULL);
     fooptr->word = strdup(insert);
     if(find_node(find,head,ptr) == 0) {
-    	list_add(&fooptr->list,ptr->next);
-    	free(ptr);
+    	list_add_tail(&fooptr->list,ptr->next);
+   	free(ptr);
     	return 0;
     } else {
         printf("INVALID COMMAND\n");
@@ -60,7 +59,7 @@ int append_node(char *find, char *append, struct list_head *head)
     assert(fooptr != NULL);
     fooptr->word = strdup(append);
     if(find_node(find,head,ptr) == 0) {
-    	list_add_tail(&fooptr->list,ptr->next);
+    	list_add(&fooptr->list,ptr->next);
     	free(ptr);
     	return 0;
     } else {
@@ -116,66 +115,78 @@ int delete_all(struct list_head *head)
 }
 
 
-void main() 
+int main() 
 {
 	//char string[1024];
-	char string[1024];
+	char *string = NULL;
 	char *token = NULL;
 	char *saveptr = NULL;
 	char *put[100];
 	int token_count = 0;
 	int word_count = 0;
+	int size = 1;
+	int endexe = 0;
 //	int x;
     	LIST_HEAD(fooHead);
-	
-	while(fgets(string,1024,stdin) != NULL) {
+	string = (char *)malloc(size * 1024);
+	while( fgets(string,size * 1024,stdin) != NULL) {
 		if(string[strlen(string) - 1] == '\n') {
 			string[strlen(string) - 1] = '\0';
-
 			token = strtok_r(string," ",&saveptr);
-			while(token != NULL) {
-				put[token_count++] = token;
-				token = strtok_r(NULL," ",&saveptr);
-			}
-			if(token_count > 20) {
-				printf("String token is overflow. The following commands are not available.\n");
-			}
-			else {
-				if(strcmp(put[0],"a") == 0) {
-					//find_node(put[1],&fooHead);
-					if(append_node(put[1],put[2],&fooHead)) {
-						break;
-					}
-					display(&fooHead);
+			if(token ==  NULL) {
+				display(&fooHead);
+				delete_all(&fooHead);
+			} else {
+				while(token != NULL) {
+					put[token_count++] = token;
+					token = strtok_r(NULL," ",&saveptr);
 				}
-				else if(strcmp(put[0],"i") == 0) {
-					if(insert_node(put[1],put[2],&fooHead)) {
-						break;
-					}
-                        		display(&fooHead);
-				}
-				else if(strcmp(put[0],"d") == 0) {
-					if(delete_node(put[1],&fooHead)) {
-						break;
-					}
-					display(&fooHead);
+				//display(&fooHead);
+				if(token_count > 100) {
+					printf("String token is overflow. The following commands are not available.\n");
 				}
 				else {
-					delete_all(&fooHead);
-					while(word_count != token_count) {
-						add_node(put[word_count],&fooHead);
-						word_count++;
+					if(strcmp(put[0],"a") == 0) {
+						if(append_node(put[1],put[2],&fooHead)) {
+							return 1;
+							break;
+						}
+						//display(&fooHead);
 					}
-					display(&fooHead);
+					else if(strcmp(put[0],"i") == 0) {
+						if(insert_node(put[1],put[2],&fooHead)) {
+							return 1;
+							break;
+						}
+                        			//display(&fooHead);
+					}
+					else if(strcmp(put[0],"d") == 0) {
+						if(delete_node(put[1],&fooHead)) {
+							return 1;
+							break;
+						}
+						//display(&fooHead);
+					}
+					else {
+						delete_all(&fooHead);
+						while(word_count != token_count) {
+							add_node(put[word_count],&fooHead);
+							word_count++;
+						}
+						//display(&fooHead);
+					}
+					token_count = 0;
+					word_count = 0;
 				}
 				token_count = 0;
-				word_count = 0;
 			}
-			token_count = 0;
 		}
-		else 
-			printf("Your input string overflow. The following commands are not available.\n ");
+		else {
+ 			size++;
+			string = (char *)malloc(size *1024);
+		}
 	}
-	//}                    
+	display(&fooHead);
+	return 0;
 }
 
