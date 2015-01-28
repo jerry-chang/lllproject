@@ -15,7 +15,6 @@ int add_node(char *str, struct list_head *head)
     assert(dotptr != NULL);
     
     dotptr->word = strdup(str);
-    
 //    dotptr->word = malloc(strlen(str)+1);
 //    strcpy(dotptr->word, str);
     INIT_LIST_HEAD(&dotptr->list);
@@ -120,22 +119,14 @@ int delete_all(struct list_head *head)
 
 int main() 
 {
-	//char string[1024];
 	char *string = NULL;
 	char *token = NULL;
 	char *saveptr = NULL;
-	char *put[100];
-	int token_count = 0;
-	int word_count = 0;
-//	int size = 1;
-	int endexe = 0;
-//	int x;
+	char *token_arr[1];
     	LIST_HEAD(dothead);
 	string = (char *)malloc(1024);
 	while( fgets(string,1024,stdin) != NULL) {
 		if(string[strlen(string) - 1] == '\n') {
-			token_count = 0;
-			word_count = 0;
 			string[strlen(string) - 1] = '\0';
 			token = strtok_r(string," ",&saveptr);
 			if(token ==  NULL) { 
@@ -143,34 +134,28 @@ int main()
 				delete_all(&dothead);
 				continue;
 			}
-			while(token != NULL) {
-				put[token_count++] = token;
-				token = strtok_r(NULL," ",&saveptr);
-			}
-			//display(&dothead);
-			if(token_count >= 100) {
-				printf("Token overflow. The following commands are not available.\n");
-				return 1;
-				break;
-			}
-			if(strcmp(put[0],"a") == 0) {
-				append_node(put[1],put[2],&dothead);
-			} else if(strcmp(put[0],"i") == 0) {
-				insert_node(put[1],put[2],&dothead);
-			} else if(strcmp(put[0],"d") == 0) {
-				delete_node(put[1],&dothead);
+			if(strcmp(token,"a") == 0) {
+				token_arr[0] = strtok_r(NULL," ",&saveptr);
+				token_arr[1] = strtok_r(NULL," ",&saveptr);
+				append_node(token_arr[0],token_arr[1],&dothead);
+			} else if(strcmp(token,"i") == 0) {
+				token_arr[0] = strtok_r(NULL," ",&saveptr);
+				token_arr[1] = strtok_r(NULL," ",&saveptr);
+				insert_node(token_arr[0],token_arr[1],&dothead);
+			} else if(strcmp(token,"d") == 0) {
+				token_arr[0] = strtok_r(NULL," ",&saveptr);
+				delete_node(token_arr[0],&dothead);
 			} else {
 				delete_all(&dothead);
-				while(word_count != token_count) {
-					add_node(put[word_count],&dothead);
-					word_count++;
+				while(token != NULL) {
+					add_node(token,&dothead);
+					token = strtok_r(NULL," ",&saveptr);
 				}
 			}
 		} else {
 			string = (char *)realloc(string,sizeof(string) * 2);
 		}
 	}
-//	display(&dothead);
 	return 0;
 }
 

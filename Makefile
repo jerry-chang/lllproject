@@ -5,6 +5,7 @@ verify: verify_llll.c
 lll: lll.c
 	gcc lll.c -o lll
 test:
+	cat 200_input.txt | ./lll | ./verify_llll 200_input_ans.txt
 	cat append.txt | ./lll | ./verify_llll append_ans.txt
 	cat empty.txt | ./lll | ./verify_llll empty_ans.txt
 	cat input.txt | ./lll | ./verify_llll input_ans.txt
