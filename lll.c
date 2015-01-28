@@ -3,12 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "list.h"
-
-struct dot {
-	char *word;
-	struct list_head list;
-};
-
+#include "lll.h"
 int add_node(char *str, struct list_head *head)
 {
     struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
@@ -22,27 +17,27 @@ int add_node(char *str, struct list_head *head)
     return 0;
 }
 
-int find_node(char *find, struct list_head *head, struct list_head *findptr)
+int find_node(char *str, struct list_head *head, struct list_head *findptr)
 {
 	struct list_head *iter;
 	struct list_head *n;
 	struct dot *node;
 	list_for_each_safe(iter, n, head) {
 		node = list_entry(iter, struct dot, list);
-		if(strcmp(node->word,find) == 0) {
+		if(strcmp(node->word,str) == 0) {
 			findptr->next = iter;
 			return 0;
 		}
 	}
 	return 1;
 }
-int insert_node(char *find, char *insert, struct list_head *head)
+int insert_node(char *str, char *insert, struct list_head *head)
 {
     struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
     struct list_head *ptr = malloc(sizeof(struct list_head));
     assert(dotptr != NULL);
     dotptr->word = strdup(insert);
-    if(find_node(find,head,ptr) == 0) {
+    if(find_node(str,head,ptr) == 0) {
     	list_add_tail(&dotptr->list,ptr->next);
    	free(ptr);
     	return 0;
@@ -52,13 +47,13 @@ int insert_node(char *find, char *insert, struct list_head *head)
     	return -1;
     }
 }    
-int append_node(char *find, char *append, struct list_head *head)
+int append_node(char *str, char *append, struct list_head *head)
 {
     struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
     struct list_head *ptr = malloc(sizeof(struct list_head));
     assert(dotptr != NULL);
     dotptr->word = strdup(append);
-    if(find_node(find,head,ptr) == 0) {
+    if(find_node(str,head,ptr) == 0) {
     	list_add(&dotptr->list,ptr->next);
     	free(ptr);
     	return 0;
@@ -69,12 +64,12 @@ int append_node(char *find, char *append, struct list_head *head)
     }
 }
 
-int delete_node(char *delete, struct list_head *head)
+int delete_node(char *str, struct list_head *head)
 {
     struct list_head *ptr = malloc(sizeof(struct list_head));
     struct list_head *iter;
     struct dot *obj;
-    if(find_node(delete,head,ptr) == 0) {
+    if(find_node(str,head,ptr) == 0) {
     	obj = list_entry(ptr->next, struct dot, list);
     	list_del(&obj->list);
     	free(ptr);
@@ -117,7 +112,7 @@ int delete_all(struct list_head *head)
 }
 
 
-int main() 
+int main(int argc, char *argv[]) 
 {
 	char *string = NULL;
 	char *token = NULL;
