@@ -13,6 +13,7 @@ test:
 	cat missing_word.txt | ./lll | ./verify_llll missing_word_ans.txt
 	cat over_del.txt | ./lll | ./verify_llll over_del_ans.txt
 	cat revert.txt | ./lll | ./verify_llll revert_ans.txt
+	cat init_as_command.txt | ./lll | ./verify_llll init_as_command_ans.txt
 lll_test:
 	cat input.txt | ./lll
 clean:

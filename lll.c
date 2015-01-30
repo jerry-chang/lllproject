@@ -33,99 +33,82 @@ int find_node(char *str, struct list_head *head, struct list_head *findptr)
 }
 int insert_node(char *str, char *insert, struct list_head *head)
 {
-    struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
-    struct list_head *ptr = malloc(sizeof(struct list_head));
-    assert(dotptr != NULL);
-    dotptr->word = strdup(insert);
-    if(find_node(str,head,ptr) == 0) {
-    	list_add_tail(&dotptr->list,ptr->next);
-   	free(ptr);
-    	return 0;
-    } else {
-        //printf("INVALID COMMAND\n");
-	free(ptr);
-    	return -1;
-    }
+	struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
+	struct list_head *ptr = malloc(sizeof(struct list_head));
+	assert(dotptr != NULL);
+	dotptr->word = strdup(insert);
+	if(find_node(str,head,ptr) == 0) {
+		list_add_tail(&dotptr->list,ptr->next);
+		free(ptr);
+		return 0;
+	} else {
+		//printf("INVALID COMMAND\n");
+		free(ptr);
+		return -1;
+	}
 }    
 int append_node(char *str, char *append, struct list_head *head)
 {
-    struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
-    struct list_head *ptr = malloc(sizeof(struct list_head));
-    assert(dotptr != NULL);
-    dotptr->word = strdup(append);
-    if(find_node(str,head,ptr) == 0) {
-    	list_add(&dotptr->list,ptr->next);
-    	free(ptr);
-    	return 0;
-    } else {
-	//printf("INVALID COMMAND\n");
-	free(ptr);
-	return -1;
-    }
+	struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
+	struct list_head *ptr = malloc(sizeof(struct list_head));
+	assert(dotptr != NULL);
+	dotptr->word = strdup(append);
+	if(find_node(str,head,ptr) == 0) {
+		list_add(&dotptr->list,ptr->next);
+		free(ptr);
+		return 0;
+	} else {
+		//printf("INVALID COMMAND\n");
+		free(ptr);
+		return -1;
+	}
 }
-
 int delete_node(char *str, struct list_head *head)
 {
-    struct list_head *ptr = malloc(sizeof(struct list_head));
-    struct list_head *iter;
-    struct dot *obj;
-    if(find_node(str,head,ptr) == 0) {
-    	obj = list_entry(ptr->next, struct dot, list);
-    	list_del(&obj->list);
-    	free(ptr);
-    	free(obj->word);
-    	free(obj);
-    	return 0;
-    } else {
-	//printf("INVALID COMMAND\n");
-	free(ptr);
-	return -1;
-    }
+	struct list_head *ptr = malloc(sizeof(struct list_head));
+	struct list_head *iter;
+	struct dot *obj;
+	if(find_node(str,head,ptr) == 0) {
+		obj = list_entry(ptr->next, struct dot, list);
+		list_del(&obj->list);
+		free(ptr);
+		free(obj->word);
+		free(obj);
+		return 0;
+	} else {
+		//printf("INVALID COMMAND\n");
+		free(ptr);
+		return -1;
+	}
 }
-
 int display(struct list_head *head)
 {
-    struct list_head *iter;
-    struct dot *obj;
+	struct list_head *iter;
+	struct dot *obj;
 
-    list_for_each(iter, head) {
-        obj = list_entry(iter, struct dot, list);
-        printf("%s ", obj->word);
-    }
-    printf("\n");
-    return 0;
+	list_for_each(iter, head) {
+    	obj = list_entry(iter, struct dot, list);
+    	printf("%s ", obj->word);
+	}
+	printf("\n");
+	return 0;
 }
-
 int delete_all(struct list_head *head)
 {
-/*
-    struct list_head *iter;
-    struct dot *obj;
-    redo: 
-    list_for_each(iter, head) {
-        obj = list_entry(iter, struct dot, list);
-        list_del(&obj->list);
-	free(obj->word);
-        free(obj);
-	goto redo;
-    }
-    return 0;
-*/
-    struct list_head *iter;
-    struct dot *obj;
-    list_for_each(iter,head) {
-	obj = list_entry(iter, struct dot, list);
-	if(obj == NULL) {
-		return 0; //finish delete
-	}
-	list_del(&obj->list);
-	free(obj->word);
-	free(obj);
-    }
-	
+	struct list_head *iter;
+    	struct list_head *n;
+    	struct dot *obj;
+    	list_for_each_safe(iter,n,head) {
+		obj = list_entry(iter, struct dot, list);
+		if(obj == NULL) {
+			return 0; //finish delete
+		}
+		list_del(&obj->list);
+		free(obj->word);
+		free(obj);
+    	}
+	return 0;	
 }
-
-
 int main(int argc, char *argv[]) 
 {
 	char *string = NULL;
