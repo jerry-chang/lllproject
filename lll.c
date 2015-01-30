@@ -98,6 +98,7 @@ int display(struct list_head *head)
 
 int delete_all(struct list_head *head)
 {
+/*
     struct list_head *iter;
     struct dot *obj;
     redo: 
@@ -109,6 +110,19 @@ int delete_all(struct list_head *head)
 	goto redo;
     }
     return 0;
+*/
+    struct list_head *iter;
+    struct dot *obj;
+    list_for_each(iter,head) {
+	obj = list_entry(iter, struct dot, list);
+	if(obj == NULL) {
+		return 0; //finish delete
+	}
+	list_del(&obj->list);
+	free(obj->word);
+	free(obj);
+    }
+	
 }
 
 
@@ -118,34 +132,37 @@ int main(int argc, char *argv[])
 	char *token = NULL;
 	char *saveptr = NULL;
 	char *token_arr[1];
+	int ini_flag = 1;
     	LIST_HEAD(dothead);
-	string = (char *)malloc(1024);
-	while( fgets(string,1024,stdin) != NULL) {
-		if(string[strlen(string) - 1] == '\n') {
+	string = (char *)malloc(1024); // memory allocate
+	while( fgets(string,1024,stdin) != NULL) { // gets string
+		if(string[strlen(string) - 1] == '\n') { // find new line
 			string[strlen(string) - 1] = '\0';
 			token = strtok_r(string," ",&saveptr);
-			if(token ==  NULL) { 
+			if(token ==  NULL) { //null line. indicate the end of one pattern
 				display(&dothead);
 				delete_all(&dothead);
+				ini_flag = 1;
 				continue;
 			}
-			if(strcmp(token,"a") == 0) {
+			if( (strcmp(token,"a") == 0) && ini_flag == 0) { // appand command
 				token_arr[0] = strtok_r(NULL," ",&saveptr);
 				token_arr[1] = strtok_r(NULL," ",&saveptr);
 				append_node(token_arr[0],token_arr[1],&dothead);
-			} else if(strcmp(token,"i") == 0) {
+			} else if( (strcmp(token,"i") == 0) && ini_flag == 0) { // insert command
 				token_arr[0] = strtok_r(NULL," ",&saveptr);
 				token_arr[1] = strtok_r(NULL," ",&saveptr);
 				insert_node(token_arr[0],token_arr[1],&dothead);
-			} else if(strcmp(token,"d") == 0) {
+			} else if( (strcmp(token,"d") == 0) && ini_flag == 0) { // delete command
 				token_arr[0] = strtok_r(NULL," ",&saveptr);
 				delete_node(token_arr[0],&dothead);
-			} else {
+			} else {  // initial input string
 				delete_all(&dothead);
 				while(token != NULL) {
 					add_node(token,&dothead);
 					token = strtok_r(NULL," ",&saveptr);
 				}
+				ini_flag = 0;
 			}
 		} else {
 			string = (char *)realloc(string,sizeof(string) * 2);
