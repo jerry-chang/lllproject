@@ -32,7 +32,7 @@ int insert_str(char *str, char *insert_str, struct list_head *head)
 		} else {
 			//printf("INVALID COMMAND\n");
 			free(ptr);
-			return -1; // error due to string no found
+			return 1; // string no found, but ok
 		}
 	} else { // add string 
 		INIT_LIST_HEAD(&dotptr->list); // initial the head pointer in link list
@@ -53,7 +53,7 @@ int append_str(char *str, char *append_str, struct list_head *head)
 	} else {
 		//printf("INVALID COMMAND\n");
 		free(ptr);
-		return -1; // error due to string no found
+		return 1; // string no found, but ok
 	}
 }
 int delete_str(char *str, struct list_head *head)
@@ -71,7 +71,7 @@ int delete_str(char *str, struct list_head *head)
 	} else {
 		//printf("INVALID COMMAND\n");
 		free(ptr);
-		return -1; //error due to string no found
+		return 1; //string no found, but ok
 	}
 }
 int display(struct list_head *head)
