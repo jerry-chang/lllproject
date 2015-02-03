@@ -6,16 +6,19 @@ struct dot {
 	struct list_head list;
 };
 
-int find_str(char *str, struct list_head *head, struct list_head *findptr);
+struct dot *new_node(char *);
 
-int insert_str(char *str, char *insert_str, struct list_head *head);
+int del_node(struct dot *);
 
-int append_str(char *str, char *append_str, struct list_head *head);
+struct list_head *find_str(char *,struct list_head *);
 
-int delete_str(char *str, struct list_head *head);
+int insert_str(char *, char *, struct list_head *);
 
-int display(struct list_head *head);
+int append_str(char *, char *, struct list_head *);
 
-int delete_all(struct list_head *head);
+int delete_str(char *, struct list_head *);
 
+int delete_all(struct list_head *);
+
+int display_all(struct list_head *);
 #endif
