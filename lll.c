@@ -5,33 +5,31 @@
 #include <string.h>
 #include "list.h"
 #include "lll.h"
-int find_str(char *str, struct list_head *head, struct list_head *findptr)
+
+struct list_head *find_str(char *str, struct list_head *head)
 {
 	struct list_head *iter;
 	struct dot *node;
 	list_for_each(iter, head) {
 		node = list_entry(iter, struct dot, list);
 		if(strcmp(node->word,str) == 0) {
-			findptr->next = iter;
-			return 0; // find the string
+			return iter; // find the string
 		}
 	}
-	return 1; // string no found, but ok
+	return NULL; // string no found, but ok
 }
+
 int insert_str(char *str, char *insert_str, struct list_head *head)
 {
 	struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
-	struct list_head *ptr = malloc(sizeof(struct list_head));
 	assert(dotptr != NULL);
 	dotptr->word = strdup(insert_str);
 	if(str != NULL) {
-		if(find_str(str,head,ptr) == 0) {
-			list_add_tail(&dotptr->list,ptr->next);
-			free(ptr);
+		if(find_str(str,head) != NULL) {
+			list_add_tail(&dotptr->list,find_str(str,head));
 			return 0; //insert the string
 		} else {
 			//printf("INVALID COMMAND\n");
-			free(ptr);
 			return 1; // string no found, but ok
 		}
 	} else { // add string 
@@ -43,34 +41,28 @@ int insert_str(char *str, char *insert_str, struct list_head *head)
 int append_str(char *str, char *append_str, struct list_head *head)
 {
 	struct dot *dotptr = (struct dot *)malloc(sizeof(struct dot));
-	struct list_head *ptr = malloc(sizeof(struct list_head));
 	assert(dotptr != NULL);
 	dotptr->word = strdup(append_str);
-	if(find_str(str,head,ptr) == 0) {
-		list_add(&dotptr->list,ptr->next);
-		free(ptr);
+	if(find_str(str,head) != NULL) {
+		list_add(&dotptr->list,find_str(str,head));
 		return 0; //append the string
 	} else {
 		//printf("INVALID COMMAND\n");
-		free(ptr);
 		return 1; // string no found, but ok
 	}
 }
 int delete_str(char *str, struct list_head *head)
 {
-	struct list_head *ptr = malloc(sizeof(struct list_head));
 	struct list_head *iter;
 	struct dot *obj;
-	if(find_str(str,head,ptr) == 0) {
-		obj = list_entry(ptr->next, struct dot, list);
+	if(find_str(str,head) != NULL) {
+		obj = list_entry(find_str(str,head), struct dot, list);
 		list_del(&obj->list);
-		free(ptr);
 		free(obj->word);
 		free(obj);
 		return 0; //delete the string
 	} else {
 		//printf("INVALID COMMAND\n");
-		free(ptr);
 		return 1; //string no found, but ok
 	}
 }
