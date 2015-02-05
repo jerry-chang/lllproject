@@ -1,24 +1,20 @@
-#ifndef _LINKLIST_H
-#define _LINKLIST_H
+#ifndef _LINUXLINKLIST_H
+#define _LINUXLINKLIST_H
 
 struct dot {
 	char *word;
 	struct list_head list;
 };
 
-struct dot *new_node(char *);
+struct dot *new_node(char *new_str);
+int del_node(struct dot *delete);
 
-int del_node(struct dot *);
+struct list_head *find_str(char *str,struct list_head *head);
+int insert_str(char *str, char *insert_str, struct list_head *head);
+int append_str(char *str, char *append_str, struct list_head *head);
+int delete_str(char *str, struct list_head *head);
 
-struct list_head *find_str(char *,struct list_head *);
+int delete_all(struct list_head *head);
+int display_all(struct list_head *head);
 
-int insert_str(char *, char *, struct list_head *);
-
-int append_str(char *, char *, struct list_head *);
-
-int delete_str(char *, struct list_head *);
-
-int delete_all(struct list_head *);
-
-int display_all(struct list_head *);
 #endif
