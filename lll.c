@@ -43,43 +43,47 @@ struct list_head *find_str(char *str, struct list_head *head)
 
 int insert_str(char *str, char *insert_str, struct list_head *head)
 {
-	struct dot *ins_nn_node = new_node(insert_str);
-	if(ins_nn_node == NULL) {
-		return -2; // no input
+	if(insert_str == NULL) {
+		return -2; // no insert_str
 	}
-	struct list_head *ins_nn_list = &ins_nn_node->list;
-	if(str == NULL) { 
-		// add string
-		list_add_tail(ins_nn_list,head);	
-		return 0; // add node success
+	struct list_head *position = head;
+	if(str != NULL) {
+		// str is not NULL
+		position = find_str(str,head);
 	}
 
-	struct list_head *ins_fs_list = find_str(str,head);
-	if(ins_fs_list == NULL) {
-		return -1; // string not found, but ok
+	if(position == NULL) {
+		return -1; // no valid position to put string
 	}
-	list_add_tail(ins_nn_list,ins_fs_list);
-	return 0; // insert the string
+
+	struct dot *newnode = new_node(insert_str);
+	if(newnode == NULL) {
+		return -2; // no input
+	}
+	list_add_tail(&newnode->list,position);
+	return 0; //success
 }    
 int append_str(char *str, char *append_str, struct list_head *head)
 {
-	struct dot *app_nn_node = new_node(append_str);
-	if(app_nn_node == NULL) {
-		return -2; // no input
+	if(append_str == NULL) {
+		return -2; // no append_str;
 	}
-	struct list_head *app_nn_list = &app_nn_node->list;
-	if(str == NULL) {
-		// add string in reverse type
-		list_add(app_nn_list,head);
-		return 0; //success
+	struct list_head *position = head;
+	if(str != NULL) {
+		// str is not NULL
+		position = find_str(str,head);
+	}
+	
+	if(position == NULL) {
+		return -1; //no valid position to put string
 	}
 
-	struct list_head *app_fs_list = find_str(str,head);
-	if(app_fs_list == NULL) {
-		return -1; // string not found, but ok
+	struct dot *newnode = new_node(append_str);
+	if(newnode == NULL) {
+		return -2; // malloc fail
 	}
-	list_add(app_nn_list,app_fs_list);
-	return 0; // append the string
+	list_add(&newnode->list,position);
+	return 0;
 }
 int delete_str(char *str, struct list_head *head)
 {
